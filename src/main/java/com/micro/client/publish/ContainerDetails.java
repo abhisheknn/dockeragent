@@ -41,6 +41,8 @@ public class ContainerDetails implements Publish {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 		return true;
 	}

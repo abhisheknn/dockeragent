@@ -73,6 +73,18 @@
 		  <artifactId>docker-client</artifactId>
 		  <version>8.14.0</version>
 		</dependency>
+		
+		<!-- workaround for https://github.com/spotify/docker-client/issues/1030 -->
+		<dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>2.26</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.bundles.repackaged</groupId>
+            <artifactId>jersey-guava</artifactId>
+            <version>2.25.1</version>
+        </dependency>
 </dependencies>
 	
 
