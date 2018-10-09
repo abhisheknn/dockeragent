@@ -18,7 +18,7 @@ public class Publisher {
 	
 
 	public void publish(PUBLISHTYPE type, String key, String value) {
-		String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+"/publish/docker";
+		String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+"/publish/docker?hostname="+key;
 		Map<String, Object> requestBody = new HashMap<>();
 		requestBody.put(Constants.KEY, key);
 		requestBody.put(Constants.VALUE, value);
