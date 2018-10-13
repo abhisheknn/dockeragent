@@ -5,7 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.ws.rs.core.MediaType;
+
+import org.apache.http.Header;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,14 +21,16 @@ import com.micro.client.publish.common.Constants;
 public class Publisher {
 	
 
-	public void publish(PUBLISHTYPE type, String key, String value) {
+	public void publish(PUBLISHTYPE type, String key, Object value) {
 		String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+"/publish/docker?hostname="+key;
 		Map<String, Object> requestBody = new HashMap<>();
 		requestBody.put(Constants.KEY, key);
 		requestBody.put(Constants.VALUE, value);
 		requestBody.put(Constants.TYPE, PUBLISHTYPE.PERFORMANCEMETRIC.name());
 		try {
-			RestClient.doPost(restEndpoint, requestBody, null);
+			Map<String, String> requestHeaders= new HashMap<>();
+			requestHeaders.put("Content-Type", ContentType.APPLICATION_JSON.toString());
+			RestClient.doPost(restEndpoint, requestBody,requestHeaders);
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

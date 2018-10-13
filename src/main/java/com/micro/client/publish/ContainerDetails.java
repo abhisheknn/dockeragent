@@ -36,7 +36,7 @@ public class ContainerDetails implements Publish {
 		try {
 			final DockerClient docker = new DefaultDockerClient("unix:///var/run/docker.sock");
 			List<Container> containers = docker.listContainers();
-			publisher.publish(PUBLISHTYPE.CONTAINERINFO,Constants.hostName, gson.toJson(containers));
+			publisher.publish(PUBLISHTYPE.CONTAINERINFO,Constants.hostName, containers);
 			docker.close();
 			} catch (DockerException e) {
 			e.printStackTrace();
