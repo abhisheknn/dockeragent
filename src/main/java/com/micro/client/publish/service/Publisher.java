@@ -26,16 +26,14 @@ public class Publisher {
 		Map<String, Object> requestBody = new HashMap<>();
 		requestBody.put(Constants.KEY, key);
 		requestBody.put(Constants.VALUE, value);
-		requestBody.put(Constants.TYPE, PUBLISHTYPE.PERFORMANCEMETRIC.name());
+		requestBody.put(Constants.TYPE, type.name());
 		try {
 			Map<String, String> requestHeaders= new HashMap<>();
 			requestHeaders.put("Content-Type", ContentType.APPLICATION_JSON.toString());
 			RestClient.doPost(restEndpoint, requestBody,requestHeaders);
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
