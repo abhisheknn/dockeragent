@@ -69,27 +69,18 @@ public class ContainerDetails implements Publish {
 			    
 			    // This is to find out deleted container after last sync
 			    List<String> existingContainerIds=commands.keys(CONTAINERIDPREFIX+"*");
-			    
-			    System.out.println("existingContainerIds");
-			    System.out.println(existingContainerIds);
-			    
 			    commands.multi();
 			    deletedContainerIds= existingContainerIds.stream()
 			    .filter(v->{  
 			    	String key=v.replace(CONTAINERIDPREFIX,"");
-			    	System.out.println(key +" we got from redis");
 			    	boolean isDeleted=!runningContainerSet.contains(key);
 			    	if(isDeleted) {
-			    		System.out.println("deleting :"+key);
 			    		commands.del(v);
 			    	}
 			    	return isDeleted;
 			    })
 			    .collect(Collectors.toList());
 			    commands.exec();
-			    System.out.println("deletedContainerIds");
-			    System.out.println(deletedContainerIds);
-			    
 			}
 			if(!deletedContainerIds.isEmpty()) {
 			publisher.publish(PUBLISHTYPE.DELETEDCONTAINERS,Constants.hostName, deletedContainerIds);
