@@ -78,6 +78,8 @@ public class ContainerDetails implements Publish {
 			    		commands.del(v);
 			    	}
 			    	return isDeleted;
+			    }).map((v)->{
+			    	return v.replace(CONTAINERIDPREFIX,"");
 			    })
 			    .collect(Collectors.toList());
 			    commands.exec();
