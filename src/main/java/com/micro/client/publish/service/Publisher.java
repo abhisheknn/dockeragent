@@ -13,14 +13,17 @@ import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.micro.client.RestClient;
+
 import com.micro.client.publish.common.PUBLISHTYPE;
+import com.micro.client.restclient.RestClient;
 import com.micro.client.publish.common.Constants;
 
 @Component
 public class Publisher {
 	
-
+	@Autowired
+	RestClient restClient;
+	
 	public void publish(PUBLISHTYPE type, String key, Object value) {
 		String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+"/publish/docker?hostname="+key;
 		Map<String, Object> requestBody = new HashMap<>();
@@ -30,7 +33,7 @@ public class Publisher {
 		try {
 			Map<String, String> requestHeaders= new HashMap<>();
 			requestHeaders.put("Content-Type", ContentType.APPLICATION_JSON.toString());
-			RestClient.doPost(restEndpoint, requestBody,requestHeaders);
+			restClient.doPost(restEndpoint, requestBody,requestHeaders);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
