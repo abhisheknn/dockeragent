@@ -14,19 +14,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.ListContainersCmd;
+import com.github.dockerjava.api.exception.DockerException;
+import com.github.dockerjava.api.model.Container;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientConfig;
 import com.google.gson.Gson;
 import com.lambdaworks.redis.api.StatefulRedisConnection;
 import com.lambdaworks.redis.api.sync.RedisCommands;
+import com.micro.client.docker.DockerClientUtil;
 import com.micro.client.publish.common.Constants;
 import com.micro.client.publish.common.PUBLISHTYPE;
 //import com.micro.client.publish.common.Constants;
 //import com.micro.client.publish.common.PUBLISHTYPE;
 import com.micro.client.publish.service.Publisher;
 import com.micro.client.redis.RedisConnection;
-import com.spotify.docker.client.DefaultDockerClient;
-import com.spotify.docker.client.DockerClient;
-import com.spotify.docker.client.exceptions.DockerException;
-import com.spotify.docker.client.messages.Container;
+//import com.spotify.docker.client.DefaultDockerClient;
+//import com.spotify.docker.client.DockerClient;
+//import com.spotify.docker.client.exceptions.DockerException;
+//import com.spotify.docker.client.messages.Container;
 
 @Component
 public class ContainerDetails implements Publish {
@@ -36,6 +43,8 @@ public class ContainerDetails implements Publish {
 	private Gson gson = new Gson();
 	
 	@Autowired
+	private DockerClientUtil dockerClientUtil;
+	@Autowired
 	private RedisConnection redisConnnection;
 	
 	@Override
@@ -43,30 +52,28 @@ public class ContainerDetails implements Publish {
 	public boolean send() {
 		
 		try {
-			final DockerClient docker = new DefaultDockerClient("unix:///var/run/docker.sock");
-			List<Container> containers = docker.listContainers();
-			docker.close();
+		 DockerClient dockerClient=dockerClientUtil.getClient();
+		 List<Container>  containers= dockerClient.listContainersCmd().exec();
+		 //dockerClient.close();
 			List <String> deletedContainerIds=new ArrayList<>();
 			Set<String> runningContainerSet= containers.stream()
-		    		.map(Container::id)
+		    		.map(Container::getId)
 		    		.collect(Collectors.toSet());
-			
 			try (StatefulRedisConnection<String, String> connection = redisConnnection.getPool().borrowObject()) {
 			    RedisCommands<String, String> commands = connection.sync();
 			   
 			    // This is to find out if you container got created after the last sync
 			    containers= containers.stream()
-			    		.filter(v->null==commands.get(CONTAINERIDPREFIX+v.id()))
+			    		.filter(v->null==commands.get(CONTAINERIDPREFIX+v.getId()))
 			    		.collect(Collectors.toList());
 			    commands.multi();
 			    // If new container got created put the 
 			    // IDS of all newly created container in redis 
 			    containers.stream()
 						    .forEach((v)->{
-						    	commands.set(CONTAINERIDPREFIX+v.id(), v.state());	
+						    	commands.set(CONTAINERIDPREFIX+v.getId(), v.getState());	
 						    });
 			    commands.exec();
-			    
 			    // This is to find out deleted container after last sync
 			    List<String> existingContainerIds=commands.keys(CONTAINERIDPREFIX+"*");
 			    commands.multi();

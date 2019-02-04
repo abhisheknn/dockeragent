@@ -24,6 +24,7 @@ public class Publisher {
 	@Autowired
 	RestClient restClient;
 	
+	
 	public void publish(PUBLISHTYPE type, String key, Object value) {
 		String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+"/publish/docker?hostname="+key;
 		Map<String, Object> requestBody = new HashMap<>();
@@ -33,6 +34,7 @@ public class Publisher {
 		try {
 			Map<String, String> requestHeaders= new HashMap<>();
 			requestHeaders.put("Content-Type", ContentType.APPLICATION_JSON.toString());
+			System.out.println("here 8");
 			restClient.doPost(restEndpoint, requestBody,requestHeaders);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
