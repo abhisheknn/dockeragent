@@ -34,7 +34,6 @@ public class Publisher {
 		try {
 			Map<String, String> requestHeaders= new HashMap<>();
 			requestHeaders.put("Content-Type", ContentType.APPLICATION_JSON.toString());
-			System.out.println("here 8");
 			restClient.doPost(restEndpoint, requestBody,requestHeaders);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
