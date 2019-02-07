@@ -33,7 +33,7 @@ public class Publisher {
 		requestBody.put(Constants.TYPE, type.name());
 		try {
 			Map<String, String> requestHeaders= new HashMap<>();
-			requestHeaders.put("Content-Type", ContentType.APPLICATION_JSON.toString());
+			requestHeaders.put("Content-Type","application/json");
 			restClient.doPost(restEndpoint, requestBody,requestHeaders);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();

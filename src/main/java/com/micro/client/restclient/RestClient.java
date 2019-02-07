@@ -5,9 +5,12 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.micro.client.Response;
+
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.entity.ContentType;
 import org.apache.http.protocol.HTTP;
 import org.springframework.stereotype.Component;
 
@@ -24,23 +27,29 @@ public class RestClient extends com.micro.client.RestClient {
 public RestClient() {
 	Map<String, String> mandatoryHeaders= new HashMap<>();
 	mandatoryHeaders.put(AppConstants.JWTOKEN, this.add());
+	
 	this.setMandatoryHeaders(mandatoryHeaders);
+	
 }
 
 
 public String add() {
-	String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+"/auth/register";
+	String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+":8004"+"/auth/register";
+	Response response=null;
 	Map<String, Object> requestBody = new HashMap<>();
 	Map<String, String> headers= new HashMap<>();
 	requestBody.put(Constants.MACADDRESS, Constants.MACADDRESSFROMENV);
 	try {
-		String res=this.doPost(restEndpoint, requestBody,null);
+		Map<String, String> requestHeaders= new HashMap<>();
+		requestHeaders.put("Content-Type","application/json");	
+		response= super.doPost(restEndpoint, requestBody,requestHeaders);
 		JsonParser parser = new JsonParser();
-		JsonObject jsonObject= parser.parse(res).getAsJsonObject();
+		JsonObject jsonObject= parser.parse(response.getStatusLine()).getAsJsonObject();
 		JsonElement jsonElement=jsonObject.get("statusCode");
 		if(jsonElement.getAsInt()==HttpStatus.SC_NOT_FOUND) {
 			System.exit(0);
 		}
+		
 	} catch (ClientProtocolException e) {
 		System.out.println(e);
 	} catch (UnknownHostException e) {
@@ -48,7 +57,7 @@ public String add() {
 	} catch (IOException e) {
 		System.out.println(e);
 	}
-	return "";
+	return response.getEntity();
 }
 
 }
