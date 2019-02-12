@@ -28,16 +28,13 @@ public class RestClient extends com.micro.client.RestClient {
 	public RestClient() {
 		Map<String, String> mandatoryHeaders = new HashMap<>();
 		mandatoryHeaders.put(AppConstants.JWTOKEN, this.add());
-
 		this.setMandatoryHeaders(mandatoryHeaders);
-
-	}
+		}
 
 	public String add() {
-		String restEndpoint = Constants.HTTP + Constants.microRestEndpoint + "/auth/register";
+		String restEndpoint = Constants.HTTP + Constants.microRestEndpoint+ "/auth/register";
 		Response response = null;
 		Map<String, Object> requestBody = new HashMap<>();
-		Map<String, String> headers = new HashMap<>();
 		requestBody.put(Constants.MACADDRESS, Constants.MACADDRESSFROMENV);
 		try {
 			Map<String, String> requestHeaders = new HashMap<>();
@@ -59,5 +56,4 @@ public class RestClient extends com.micro.client.RestClient {
 		}
 		return response.getEntity();
 	}
-
 }

@@ -52,14 +52,14 @@ public class ContainerDetails implements Publish {
 				if (event.getType() == EventType.CONTAINER) {
 
 					String containerId = event.getId();
-					Collection<String> ids = Arrays.asList(containerId);
+					List<String> ids = Arrays.asList(containerId);
 					List<Container> containers = dockerClientUtil.getClient().listContainersCmd().withIdFilter(ids)
 							.exec();
 					if (event.getAction().equals(Constants.STARTACTION)) {
-						publisher.publish(PUBLISHTYPE.CONTAINERINFO, Constants.MACADDRESSFROMENV, containers);
+						publisher.publish(PUBLISHTYPE.CONTAINERINFO, Constants.MACADDRESSFROMENV, containers.get(0));
 					}
 					if (event.getAction().equals(Constants.DESTROYACTION)) {
-						publisher.publish(PUBLISHTYPE.DELETEDCONTAINERS, Constants.MACADDRESSFROMENV, ids);
+						publisher.publish(PUBLISHTYPE.DELETEDCONTAINERS, Constants.MACADDRESSFROMENV, ids.get(0));
 					}
 				}
 				super.onNext(event);
