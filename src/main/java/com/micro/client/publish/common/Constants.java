@@ -14,4 +14,9 @@ public class Constants {
 	public static final String CONTAINER_ID = "containerID";
 	public static final String MACADDRESS = "macAddress";
 	
+	//Event Actions
+	public static final Object STARTACTION = "start";
+	public static final Object DESTROYACTION = "destroy";
+	
+	
 }
