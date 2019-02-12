@@ -31,6 +31,7 @@ public class Publisher {
 		requestBody.put(Constants.KEY, key);
 		requestBody.put(Constants.VALUE, value);
 		requestBody.put(Constants.TYPE, type.name());
+		System.out.println(requestBody);
 		try {
 			Map<String, String> requestHeaders= new HashMap<>();
 			requestHeaders.put("Content-Type","application/json");

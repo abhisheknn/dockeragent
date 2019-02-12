@@ -19,10 +19,10 @@ public class DockerClientUtil {
 		config=DefaultDockerClientConfig.createDefaultConfigBuilder()
 			  .withDockerHost("unix:///var/run/docker.sock") //tcp://localhost:2375
 			  .build();
-			// using jaxrs/jersey implementation here (netty impl is also available)
+			
 		 dockerCmdExecFactory	= new JerseyDockerCmdExecFactory()
-			  .withReadTimeout(1000)	
-			  .withConnectTimeout(1000)
+			 // .withReadTimeout(1000)	
+			  //.withConnectTimeout(1000)
 			  .withMaxTotalConnections(100)
 			  .withMaxPerRouteConnections(10);
 	}

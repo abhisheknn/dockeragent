@@ -23,42 +23,41 @@ import com.micro.constant.AppConstants;
 
 @Component
 public class RestClient extends com.micro.client.RestClient {
-	Gson gson= new Gson();
-public RestClient() {
-	Map<String, String> mandatoryHeaders= new HashMap<>();
-	mandatoryHeaders.put(AppConstants.JWTOKEN, this.add());
-	
-	this.setMandatoryHeaders(mandatoryHeaders);
-	
-}
+	Gson gson = new Gson();
 
+	public RestClient() {
+		Map<String, String> mandatoryHeaders = new HashMap<>();
+		mandatoryHeaders.put(AppConstants.JWTOKEN, this.add());
 
-public String add() {
-	String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+":8004"+"/auth/register";
-	Response response=null;
-	Map<String, Object> requestBody = new HashMap<>();
-	Map<String, String> headers= new HashMap<>();
-	requestBody.put(Constants.MACADDRESS, Constants.MACADDRESSFROMENV);
-	try {
-		Map<String, String> requestHeaders= new HashMap<>();
-		requestHeaders.put("Content-Type","application/json");	
-		response= super.doPost(restEndpoint, requestBody,requestHeaders);
-		JsonParser parser = new JsonParser();
-		JsonObject jsonObject= parser.parse(response.getStatusLine()).getAsJsonObject();
-		JsonElement jsonElement=jsonObject.get("statusCode");
-		if(jsonElement.getAsInt()==HttpStatus.SC_NOT_FOUND) {
-			System.exit(0);
-		}
-		
-	} catch (ClientProtocolException e) {
-		System.out.println(e);
-	} catch (UnknownHostException e) {
-		System.out.println( e);
-	} catch (IOException e) {
-		System.out.println(e);
+		this.setMandatoryHeaders(mandatoryHeaders);
+
 	}
-	return response.getEntity();
-}
+
+	public String add() {
+		String restEndpoint = Constants.HTTP + Constants.microRestEndpoint + "/auth/register";
+		Response response = null;
+		Map<String, Object> requestBody = new HashMap<>();
+		Map<String, String> headers = new HashMap<>();
+		requestBody.put(Constants.MACADDRESS, Constants.MACADDRESSFROMENV);
+		try {
+			Map<String, String> requestHeaders = new HashMap<>();
+			requestHeaders.put("Content-Type", "application/json");
+			response = super.doPost(restEndpoint, requestBody, requestHeaders);
+			JsonParser parser = new JsonParser();
+			JsonObject jsonObject = parser.parse(response.getStatusLine()).getAsJsonObject();
+			JsonElement jsonElement = jsonObject.get("statusCode");
+			if (jsonElement.getAsInt() == HttpStatus.SC_NOT_FOUND) {
+				System.exit(0);
+			}
+
+		} catch (ClientProtocolException e) {
+			System.out.println(e);
+		} catch (UnknownHostException e) {
+			System.out.println(e);
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+		return response.getEntity();
+	}
 
 }
-
