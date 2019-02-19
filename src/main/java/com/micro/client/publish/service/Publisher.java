@@ -26,12 +26,11 @@ public class Publisher {
 	
 	
 	public void publish(PUBLISHTYPE type, String key, Object value) {
-		String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+"/publish/docker?macaddress="+key;
+		String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+Constants.PUBLISH_ENDPOINT+key;
 		Map<String, Object> requestBody = new HashMap<>();
 		requestBody.put(Constants.KEY, key);
 		requestBody.put(Constants.VALUE, value);
 		requestBody.put(Constants.TYPE, type.name());
-		System.out.println(requestBody);
 		try {
 			Map<String, String> requestHeaders= new HashMap<>();
 			requestHeaders.put("Content-Type","application/json");
