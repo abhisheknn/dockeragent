@@ -1,9 +1,9 @@
 package com.micro.client.publish.common;
 
 public enum PUBLISHTYPE {
-
 	PERFORMANCEMETRIC,
 	CONTAINERINFO, 
-	DELETEDCONTAINERS;
-	
+	DELETEDCONTAINERS, 
+	COMMANDS, 
+	FILE_DIFF, PROCESSES;
 }

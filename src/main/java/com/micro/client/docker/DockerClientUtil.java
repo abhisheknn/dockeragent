@@ -17,7 +17,8 @@ public class DockerClientUtil {
 	public DockerClientUtil() {
 
 		config=DefaultDockerClientConfig.createDefaultConfigBuilder()
-			  .withDockerHost("unix:///var/run/docker.sock") //tcp://localhost:2375
+			  .withDockerHost("unix:///var/run/docker.sock") 
+			  //.withDockerHost("tcp://localhost:2375") 
 			  .build();
 			
 		 dockerCmdExecFactory	= new JerseyDockerCmdExecFactory()

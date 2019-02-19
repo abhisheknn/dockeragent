@@ -13,10 +13,13 @@ public class Constants {
 	public static final String HOSTNAME = "hostname";
 	public static final String CONTAINER_ID = "containerID";
 	public static final String MACADDRESS = "macAddress";
+	public static final String PUBLISH_ENDPOINT = "/publish/docker?key=";
+	public static final String ROOT_BASH_HISTORY = "/root/.bash_history";
 	
 	//Event Actions
 	public static final Object STARTACTION = "start";
 	public static final Object DESTROYACTION = "destroy";
+	public static final Object STOPACTION = "stop";
 	
 	
 }
