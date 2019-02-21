@@ -14,6 +14,8 @@ import com.github.dockerjava.api.command.TopContainerCmd;
 import com.github.dockerjava.api.command.TopContainerResponse;
 import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.model.ChangeLog;
+import com.github.dockerjava.api.model.Container;
+import com.github.dockerjava.api.model.Network;
 import com.micro.client.publish.common.Constants;
 
 @Component
@@ -44,6 +46,14 @@ public class Collect{
 	
 		TopContainerResponse containerResponse= dockerClientUtil.getClient().topContainerCmd(containerId).exec();
 		return containerResponse.getProcesses();
+	}
+
+	public List<Network> network() {
+		return dockerClientUtil.getClient().listNetworksCmd().exec();
+	}
+
+	public List<Container> containers() {
+		return dockerClientUtil.getClient().listContainersCmd().exec();
 	}
 
 }
