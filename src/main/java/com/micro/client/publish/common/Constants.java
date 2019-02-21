@@ -17,9 +17,14 @@ public class Constants {
 	public static final String ROOT_BASH_HISTORY = "/root/.bash_history";
 	
 	//Event Actions
-	public static final Object STARTACTION = "start";
-	public static final Object DESTROYACTION = "destroy";
-	public static final Object STOPACTION = "stop";
+	public static final String STARTACTION = "start";
+	public static final String DESTROYACTION = "destroy";
+	public static final String STOPACTION = "stop";
+	public static final String NETWORK_CREATE = "create";
+	public static final String NETWORK_CONNECT = "connect";
+	public static final String NETWORK_DESTROY = "destroy";
+	public static final String NETWORK_DISCONNECT = "disconnect";
+	public static final String NETWORK_REMOVE = "remove";
 	
 	
 }

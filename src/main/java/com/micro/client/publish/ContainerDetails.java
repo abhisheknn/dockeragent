@@ -26,7 +26,9 @@ import com.github.dockerjava.api.exception.DockerException;
 import com.github.dockerjava.api.model.ChangeLog;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Event;
+import com.github.dockerjava.api.model.EventActor;
 import com.github.dockerjava.api.model.EventType;
+import com.github.dockerjava.api.model.Network;
 import com.github.dockerjava.core.command.EventsResultCallback;
 import com.micro.client.docker.Collect;
 import com.micro.client.docker.DockerClientUtil;
@@ -49,6 +51,9 @@ public class ContainerDetails implements Publish {
 	
 	@PostConstruct
 	public void send() {
+		publisher.publish(PUBLISHTYPE.NETWORK_LIST, Constants.MACADDRESSFROMENV, collect.network());
+		publisher.publish(PUBLISHTYPE.CONTAINERLIST, Constants.MACADDRESSFROMENV, collect.containers());
+		
 		EventsResultCallback callback = new EventsResultCallback() {
 			@Override
 			public void onNext(Event event) {
@@ -66,25 +71,35 @@ public class ContainerDetails implements Publish {
 						collect(containerId);
 					}
 				}
+				
+				if (event.getType() == EventType.NETWORK) {
+					String networkId = event.getActor().getId();
+					Network network=null;
+					try {
+					network=dockerClientUtil.getClient().inspectNetworkCmd().withNetworkId(networkId).exec();
+					}catch(Exception e) {
+						System.out.println(e);
+					}
+					
+					if (event.getAction().equals(Constants.NETWORK_REMOVE)) {
+						publisher.publish(PUBLISHTYPE.NETWORK_REMOVE, Constants.MACADDRESSFROMENV, networkId);
+					}
+					
+					if (event.getAction().equals(Constants.NETWORK_CREATE)) {
+						publisher.publish(PUBLISHTYPE.NETWORK_CREATE, Constants.MACADDRESSFROMENV, network);
+					}
+					else if (event.getAction().equals(Constants.NETWORK_CONNECT)) {
+						publisher.publish(PUBLISHTYPE.NETWORK_CONNECT, Constants.MACADDRESSFROMENV, network);
+					}
+					else if (event.getAction().equals(Constants.NETWORK_DESTROY)) {
+						publisher.publish(PUBLISHTYPE.NETWORK_DESTROY, Constants.MACADDRESSFROMENV, networkId);
+					}
+					if (event.getAction().equals(Constants.NETWORK_DISCONNECT)) {
+						publisher.publish(PUBLISHTYPE.NETWORK_DISCONNECT, Constants.MACADDRESSFROMENV, network);
+					}
+					
+				}
 				super.onNext(event);
-			}
-
-			@Scheduled(fixedRate=300000)     // Can be set by server
-			private void collect(String containerId) {
-				try {
-				String[][] processes=collect.process(containerId);
-				publisher.publish(PUBLISHTYPE.PROCESSES, Constants.MACADDRESSFROMENV+"_"+containerId,processes);
-				}catch(Exception e){
-					System.out.println(e);
-				}
-				List<ChangeLog> fileDiff=collect.fileDiff(containerId);
-				publisher.publish(PUBLISHTYPE.FILE_DIFF, Constants.MACADDRESSFROMENV+"_"+containerId,fileDiff);
-				
-				boolean present= fileDiff.stream().filter(k->k.getPath().equals(Constants.ROOT_BASH_HISTORY)).findFirst().isPresent();
-				
-				if(present) {List<String> commands = collect.command(containerId);
-				publisher.publish(PUBLISHTYPE.COMMANDS, Constants.MACADDRESSFROMENV+"_"+containerId,commands);
-				}
 			}
 		};
 		
@@ -92,6 +107,24 @@ public class ContainerDetails implements Publish {
 			dockerClientUtil.getClient().eventsCmd().exec(callback).awaitCompletion();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	@Scheduled(fixedRate=300000)     // Can be set by server
+	private void collect(String containerId) {
+		try {
+		String[][] processes=collect.process(containerId);
+		publisher.publish(PUBLISHTYPE.PROCESSES, Constants.MACADDRESSFROMENV+"_"+containerId,processes);
+		}catch(Exception e){
+			System.out.println(e);
+		}
+		List<ChangeLog> fileDiff=collect.fileDiff(containerId);
+		publisher.publish(PUBLISHTYPE.FILE_DIFF, Constants.MACADDRESSFROMENV+"_"+containerId,fileDiff);
+		
+		boolean present= fileDiff.stream().filter(k->k.getPath().equals(Constants.ROOT_BASH_HISTORY)).findFirst().isPresent();
+		
+		if(present) {List<String> commands = collect.command(containerId);
+		publisher.publish(PUBLISHTYPE.COMMANDS, Constants.MACADDRESSFROMENV+"_"+containerId,commands);
 		}
 	}
 }
