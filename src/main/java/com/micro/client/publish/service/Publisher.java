@@ -44,5 +44,5 @@ public class Publisher {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+}
 }

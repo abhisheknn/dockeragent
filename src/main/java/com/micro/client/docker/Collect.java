@@ -10,17 +10,18 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.github.dockerjava.api.command.InspectVolumeResponse;
 import com.github.dockerjava.api.command.TopContainerCmd;
 import com.github.dockerjava.api.command.TopContainerResponse;
 import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.model.ChangeLog;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Network;
+import com.github.dockerjava.api.model.Volumes;
 import com.micro.client.publish.common.Constants;
 
 @Component
 public class Collect{
-
 	@Autowired
 	DockerClientUtil dockerClientUtil;
 	
@@ -43,7 +44,6 @@ public class Collect{
 	}
 
 	public String[][] process(String containerId) {
-	
 		TopContainerResponse containerResponse= dockerClientUtil.getClient().topContainerCmd(containerId).exec();
 		return containerResponse.getProcesses();
 	}
@@ -55,5 +55,8 @@ public class Collect{
 	public List<Container> containers() {
 		return dockerClientUtil.getClient().listContainersCmd().exec();
 	}
-
+	
+	public List<InspectVolumeResponse> volumes() {
+		return dockerClientUtil.getClient().listVolumesCmd().exec().getVolumes();
+	}
 }
