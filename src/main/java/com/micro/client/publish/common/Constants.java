@@ -20,11 +20,13 @@ public class Constants {
 	public static final String STARTACTION = "start";
 	public static final String DESTROYACTION = "destroy";
 	public static final String STOPACTION = "stop";
-	public static final String NETWORK_CREATE = "create";
-	public static final String NETWORK_CONNECT = "connect";
-	public static final String NETWORK_DESTROY = "destroy";
-	public static final String NETWORK_DISCONNECT = "disconnect";
-	public static final String NETWORK_REMOVE = "remove";
-	
+	public static final String CREATE = "create";
+	public static final String CONNECT = "connect";
+	public static final String DESTROY = "destroy";
+	public static final String DISCONNECT = "disconnect";
+	public static final String REMOVE = "remove";
+	public static final String UNMOUNT = "unmount";
+	public static final String MOUNT = "mount";
+
 	
 }
