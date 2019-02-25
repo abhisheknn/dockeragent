@@ -13,28 +13,36 @@ import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.micro.client.RestClient;
+
 import com.micro.client.publish.common.PUBLISHTYPE;
+import com.micro.client.restclient.RestClient;
+import com.google.gson.Gson;
 import com.micro.client.publish.common.Constants;
 
 @Component
 public class Publisher {
 	
-
+	@Autowired
+	RestClient restClient;
+	
+	Gson gson= new Gson();
+	
 	public void publish(PUBLISHTYPE type, String key, Object value) {
-		String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+"/publish/docker?hostname="+key;
+		String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+Constants.PUBLISH_ENDPOINT+key;
 		Map<String, Object> requestBody = new HashMap<>();
 		requestBody.put(Constants.KEY, key);
 		requestBody.put(Constants.VALUE, value);
 		requestBody.put(Constants.TYPE, type.name());
+		System.out.println(gson.toJson(value));
+		
 		try {
 			Map<String, String> requestHeaders= new HashMap<>();
-			requestHeaders.put("Content-Type", ContentType.APPLICATION_JSON.toString());
-			RestClient.doPost(restEndpoint, requestBody,requestHeaders);
+			requestHeaders.put("Content-Type","application/json");
+			restClient.doPost(restEndpoint, requestBody,requestHeaders);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+}
 }
