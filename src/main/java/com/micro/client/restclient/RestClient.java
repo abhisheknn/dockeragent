@@ -28,6 +28,8 @@ public class RestClient extends com.micro.client.RestClient {
 	public RestClient() {
 		Map<String, String> mandatoryHeaders = new HashMap<>();
 		mandatoryHeaders.put(AppConstants.JWTOKEN, this.add());
+		mandatoryHeaders.put(Constants.MACADDRESS,Constants.MACADDRESSFROMENV);
+		mandatoryHeaders.put(Constants.TENANTIDSTR,Constants.TENANTIDFROMENV);
 		this.setMandatoryHeaders(mandatoryHeaders);
 		}
 
@@ -36,6 +38,7 @@ public class RestClient extends com.micro.client.RestClient {
 		Response response = null;
 		Map<String, Object> requestBody = new HashMap<>();
 		requestBody.put(Constants.MACADDRESS, Constants.MACADDRESSFROMENV);
+		requestBody.put(Constants.TENANTIDSTR, Constants.TENANTIDFROMENV);
 		try {
 			Map<String, String> requestHeaders = new HashMap<>();
 			requestHeaders.put("Content-Type", "application/json");

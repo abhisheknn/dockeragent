@@ -24,17 +24,14 @@ public class Publisher {
 	
 	@Autowired
 	RestClient restClient;
-	
 	Gson gson= new Gson();
 	
 	public void publish(PUBLISHTYPE type, String key, Object value) {
-		String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+Constants.PUBLISH_ENDPOINT+key;
+		String restEndpoint = Constants.HTTP+Constants.microRestEndpoint+Constants.PUBLISH_ENDPOINT;
 		Map<String, Object> requestBody = new HashMap<>();
 		requestBody.put(Constants.KEY, key);
 		requestBody.put(Constants.VALUE, value);
 		requestBody.put(Constants.TYPE, type.name());
-		System.out.println(gson.toJson(value));
-		
 		try {
 			Map<String, String> requestHeaders= new HashMap<>();
 			requestHeaders.put("Content-Type","application/json");
