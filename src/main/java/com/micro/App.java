@@ -10,12 +10,12 @@ import com.micro.client.publish.Publish;
 import com.micro.policy.PolicyEnforcer;
 
 @SpringBootApplication
-//@EnableScheduling
+@EnableScheduling
 public class App {
 	@Autowired
 	MQTTConnector mqttConnector;
 	
-	//@Autowired
+	@Autowired
 	Publish publish;
 	
 	public static void main(String[] args) {
