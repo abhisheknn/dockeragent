@@ -13,8 +13,10 @@ public class Constants {
 	public static final String HOSTNAME = "hostname";
 	public static final String CONTAINER_ID = "containerID";
 	public static final String MACADDRESS = "macAddress";
-	public static final String PUBLISH_ENDPOINT = "/publish/docker?key=";
+	public static final String PUBLISH_ENDPOINT = "/publish/docker";
 	public static final String ROOT_BASH_HISTORY = "/root/.bash_history";
+	public static final String TENANTIDSTR = "tenantId";
+	public static String TENANTIDFROMENV = System.getenv("TENANTID");
 	
 	//Event Actions
 	public static final String STARTACTION = "start";
@@ -27,6 +29,9 @@ public class Constants {
 	public static final String REMOVE = "remove";
 	public static final String UNMOUNT = "unmount";
 	public static final String MOUNT = "mount";
-
+	public static final String MQTTBROKER = System.getenv("MQTTBROKER");
+	public static final String CLIENTIDSUBSCRIBER =TENANTIDFROMENV+"_"+MACADDRESSFROMENV;
+	public static final String MQTTTOPIC =TENANTIDFROMENV+"/"+MACADDRESSFROMENV;
+	
 	
 }
