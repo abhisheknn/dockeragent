@@ -29,6 +29,9 @@ public class Constants {
 	public static final String REMOVE = "remove";
 	public static final String UNMOUNT = "unmount";
 	public static final String MOUNT = "mount";
+	public static final String MQTTBROKER = System.getenv("MQTTBROKER");
+	public static final String CLIENTIDSUBSCRIBER =TENANTIDFROMENV+"_"+MACADDRESSFROMENV;
+	public static final String MQTTTOPIC =TENANTIDFROMENV+"/"+MACADDRESSFROMENV;
 	
 	
 }

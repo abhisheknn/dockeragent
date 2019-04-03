@@ -68,44 +68,21 @@
   		<artifactId>commonlib</artifactId>
   		<version>0.1</version>	
 	</dependency>
-		<!--
-		<dependency>
-		  <groupId>com.spotify</groupId>
-		  <artifactId>docker-client</artifactId>
-		  <version>8.14.0</version>
-		</dependency>
-		
-		 workaround for https://github.com/spotify/docker-client/issues/1030 
-		<dependency>
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
-            <version>2.26</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.bundles.repackaged</groupId>
-            <artifactId>jersey-guava</artifactId>
-            <version>2.25.1</version>
-        </dependency>
-      
-       use latest version https://github.com/docker-java/docker-java/releases -->  
+		 
+       <!-- use latest version https://github.com/docker-java/docker-java/releases -->  
       <dependency>
       <groupId>com.github.docker-java</groupId>
       <artifactId>docker-java</artifactId>
       <version>3.1.0</version>
 	 </dependency>  
         
-      <!-- Redis Lettuce dependency -->
-    <dependency>
-	    <groupId>org.apache.commons</groupId>
-	    <artifactId>commons-pool2</artifactId>
-	    <version>2.4.3</version>
-	</dependency>
     
-    <dependency>
-	  <groupId>biz.paluch.redis</groupId>
-	  <artifactId>lettuce</artifactId>
-	  <version>4.4.0.Final</version>
-	</dependency>
+<!-- MQTT -->	
+	<dependency>
+	<groupId>org.eclipse.paho</groupId>
+	<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+	<version>1.2.0</version>
+</dependency>
 </dependencies>
 	
 

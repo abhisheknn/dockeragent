@@ -38,7 +38,7 @@ import com.micro.client.publish.common.PUBLISHTYPE;
 
 import com.micro.client.publish.service.Publisher;
 
-@Component
+//@Component
 public class Publish {
 
 	@Autowired
@@ -52,6 +52,7 @@ public class Publish {
 	
 	@PostConstruct
 	public void send() {
+		System.out.println("publish");
 		publisher.publish(PUBLISHTYPE.NETWORK_LIST, Constants.MACADDRESSFROMENV, collect.network());
 		publisher.publish(PUBLISHTYPE.CONTAINERLIST, Constants.MACADDRESSFROMENV, collect.containers());	
 		publisher.publish(PUBLISHTYPE.VOLUMELIST, Constants.MACADDRESSFROMENV, collect.volumes());
