@@ -29,7 +29,7 @@ public class MQTTConnector {
 	}
 
 	public MQTTConnector() {
-		mqttAsyncClient = MQTTAsync.getClient("tcp://" + Constants.MQTTBROKER, Constants.CLIENTIDSUBSCRIBER);
+		mqttAsyncClient = MQTTAsync.getClient("tcp://" + Constants.MQTTBROKER, Constants.CLIENTIDSUBSCRIBER+2);
 		mqttAsyncClient.ifPresent((subscriber) -> {
 
 			MqttConnectOptions options = new MqttConnectOptions();
