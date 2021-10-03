@@ -12,6 +12,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.entity.ContentType;
 import org.apache.http.protocol.HTTP;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -37,8 +38,8 @@ public class RestClient extends com.micro.client.RestClient {
 		String restEndpoint = Constants.HTTP + Constants.microRestEndpoint+ "/auth/register";
 		Response response = null;
 		Map<String, Object> requestBody = new HashMap<>();
-		requestBody.put(Constants.MACADDRESS, Constants.MACADDRESSFROMENV);
-		requestBody.put(Constants.TENANTIDSTR, Constants.TENANTIDFROMENV);
+		requestBody.put(Constants.MAC_ADDRESS, Constants.MACADDRESSFROMENV);
+		requestBody.put(Constants.TENANT_ID, Constants.TENANTIDFROMENV);
 		try {
 			Map<String, String> requestHeaders = new HashMap<>();
 			requestHeaders.put("Content-Type", "application/json");

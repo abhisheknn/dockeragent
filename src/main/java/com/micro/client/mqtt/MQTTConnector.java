@@ -10,6 +10,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import com.micro.client.publish.common.Constants;
@@ -17,6 +18,7 @@ import com.micro.policy.PolicyEnforcer;
 import com.mirco.mqtt.MQTTAsync;
 
 @Component
+@ConditionalOnProperty(prefix = "c2", name = "enabled", havingValue = "true")
 public class MQTTConnector {
 
 	@Autowired

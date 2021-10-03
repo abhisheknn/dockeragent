@@ -17,19 +17,19 @@ public class DockerClientUtil {
 	public DockerClientUtil() {
 
 		config=DefaultDockerClientConfig.createDefaultConfigBuilder()
-			  .withDockerHost("unix:///var/run/docker.sock") 
-			  //.withDockerHost("tcp://localhost:2375") 
+			  .withDockerHost("unix:///var/run/docker.sock")
+			  //.withDockerHost("tcp://localhost:2375")
 			  .build();
-			
+
 		 dockerCmdExecFactory	= new JerseyDockerCmdExecFactory()
-			 // .withReadTimeout(1000)	
+			 // .withReadTimeout(1000)
 			  //.withConnectTimeout(1000)
 			  .withMaxTotalConnections(100)
 			  .withMaxPerRouteConnections(10);
 	}
-	
+
 	public DockerClient getClient() {
-		if(dockerClient==null) { 
+		if(dockerClient==null) {
 		dockerClient = DockerClientBuilder.getInstance(config)
 				  .withDockerCmdExecFactory(dockerCmdExecFactory)
 				  .build();

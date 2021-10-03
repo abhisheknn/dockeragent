@@ -20,6 +20,7 @@ import com.micro.client.docker.DockerClientUtil;
 import com.micro.client.publish.common.Constants;
 import com.micro.client.publish.common.PUBLISHTYPE;
 import com.micro.client.publish.service.Publisher;
+import org.springframework.util.CollectionUtils;
 
 @Component
 public class Publish {
@@ -124,12 +125,14 @@ public class Publish {
 
 			publisher.publish(PUBLISHTYPE.PROCESSES, Constants.MACADDRESSFROMENV + "_" + containerId, processes);
 			List<ChangeLog> fileDiff = collect.fileDiff(containerId);
+			if(!CollectionUtils.isEmpty(fileDiff)){
 			publisher.publish(PUBLISHTYPE.FILE_DIFF, Constants.MACADDRESSFROMENV + "_" + containerId, fileDiff);
 			boolean present = fileDiff.stream().filter(k -> k.getPath().equals(Constants.ROOT_BASH_HISTORY)).findFirst()
 					.isPresent();
 			if (present) {
 				List<String> commands = collect.command(containerId);
 				publisher.publish(PUBLISHTYPE.COMMANDS, Constants.MACADDRESSFROMENV + "_" + containerId, commands);
+			}
 			}
 
 		} catch (Exception e) {
