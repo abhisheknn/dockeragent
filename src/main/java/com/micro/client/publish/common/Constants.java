@@ -17,7 +17,7 @@ public class Constants {
 	public static final String ROOT_BASH_HISTORY = "/root/.bash_history";
 	public static final String TENANTIDSTR = "tenantId";
 	public static String TENANTIDFROMENV = System.getenv("TENANTID");
-	
+
 	//Event Actions
 	public static final String STARTACTION = "start";
 	public static final String DESTROYACTION = "destroy";
@@ -29,6 +29,11 @@ public class Constants {
 	public static final String REMOVE = "remove";
 	public static final String UNMOUNT = "unmount";
 	public static final String MOUNT = "mount";
-	
-	
+	public static final String MQTTBROKER = System.getenv("MQTTBROKER");
+	public static final String CLIENTIDSUBSCRIBER =TENANTIDFROMENV+"_"+MACADDRESSFROMENV;
+	public static final String MQTTTOPIC =TENANTIDFROMENV+"/"+MACADDRESSFROMENV;
+
+  public static final String TENANT_ID="TENANT_ID";
+  public static final String MAC_ADDRESS="MACADDRESS";
+
 }
