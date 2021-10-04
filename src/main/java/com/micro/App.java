@@ -14,13 +14,7 @@ import com.micro.policy.PolicyEnforcer;
 @EnableScheduling
 @ComponentScan
 public class App {
-//	@Autowired
-//	MQTTConnector mqttConnector;
-//
-//	@Autowired
-//	Publish publish;
-
-	public static void main(String[] args) {
+  public static void main(String[] args) {
 		SpringApplication.run(App.class, args);
 	}
 }

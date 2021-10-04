@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.Schedules;
 import org.springframework.stereotype.Component;
 
 import com.github.dockerjava.api.model.ChangeLog;
@@ -53,19 +54,24 @@ public class Publish {
 			}
 
 			private void collectContainer(Event event) {
+        try {
+          String containerId = event.getId();
+          List<String> ids = Arrays.asList(containerId);
+          List<Container> containers = dockerClientUtil.getClient().listContainersCmd().withIdFilter(ids).exec();
 
-				String containerId = event.getId();
-				List<String> ids = Arrays.asList(containerId);
-				List<Container> containers = dockerClientUtil.getClient().listContainersCmd().withIdFilter(ids).exec();
+          if(!CollectionUtils.isEmpty(containers)) {
+            if (event.getAction().equals(Constants.STARTACTION)) {
+              publisher.publish(PUBLISHTYPE.CONTAINERINFO, Constants.MACADDRESSFROMENV, containers.get(0));
 
-				if (event.getAction().equals(Constants.STARTACTION)) {
-					publisher.publish(PUBLISHTYPE.CONTAINERINFO, Constants.MACADDRESSFROMENV, containers.get(0));
+            }
+            if (event.getAction().equals(Constants.STOPACTION)) {
+              publisher.publish(PUBLISHTYPE.DELETEDCONTAINERS, Constants.MACADDRESSFROMENV, ids.get(0));
+            }
+            collect(containerId);
+          }
+        } catch (Exception e){
 
-				}
-				if (event.getAction().equals(Constants.STOPACTION)) {
-					publisher.publish(PUBLISHTYPE.DELETEDCONTAINERS, Constants.MACADDRESSFROMENV, ids.get(0));
-				}
-				collect(containerId);
+        }
 
 			}
 
@@ -75,24 +81,22 @@ public class Publish {
 				Network network = null;
 				try {
 					network = dockerClientUtil.getClient().inspectNetworkCmd().withNetworkId(networkId).exec();
+
+          if (event.getAction().equals(Constants.REMOVE)) {
+            publisher.publish(PUBLISHTYPE.NETWORK_REMOVE, Constants.MACADDRESSFROMENV, network);
+          } else if (event.getAction().equals(Constants.CREATE)) {
+            publisher.publish(PUBLISHTYPE.NETWORK_CREATE, Constants.MACADDRESSFROMENV, network);
+          } else if (event.getAction().equals(Constants.CONNECT)) {
+            publisher.publish(PUBLISHTYPE.NETWORK_CONNECT, Constants.MACADDRESSFROMENV, network);
+          } else if (event.getAction().equals(Constants.DESTROY)) {
+            publisher.publish(PUBLISHTYPE.NETWORK_DESTROY, Constants.MACADDRESSFROMENV, networkId);
+          } else if (event.getAction().equals(Constants.DISCONNECT)) {
+            publisher.publish(PUBLISHTYPE.NETWORK_DISCONNECT, Constants.MACADDRESSFROMENV, network);
+          }
 				} catch (Exception e) {
 					System.out.println(e);
 				}
 
-				if (event.getAction().equals(Constants.REMOVE)) {
-					publisher.publish(PUBLISHTYPE.NETWORK_REMOVE, Constants.MACADDRESSFROMENV, network);
-				}
-
-				if (event.getAction().equals(Constants.CREATE)) {
-					publisher.publish(PUBLISHTYPE.NETWORK_CREATE, Constants.MACADDRESSFROMENV, network);
-				} else if (event.getAction().equals(Constants.CONNECT)) {
-					publisher.publish(PUBLISHTYPE.NETWORK_CONNECT, Constants.MACADDRESSFROMENV, network);
-				} else if (event.getAction().equals(Constants.DESTROY)) {
-					publisher.publish(PUBLISHTYPE.NETWORK_DESTROY, Constants.MACADDRESSFROMENV, networkId);
-				}
-				if (event.getAction().equals(Constants.DISCONNECT)) {
-					publisher.publish(PUBLISHTYPE.NETWORK_DISCONNECT, Constants.MACADDRESSFROMENV, network);
-				}
 			}
 
 			private void collectVolume(Event event) {
@@ -118,11 +122,10 @@ public class Publish {
 		}
 	}
 
-	@Scheduled(fixedRate = 300000) // Can be set by server
+	//@Scheduled(fixedRate = 10000) // Can be set by server
 	private void collect(String containerId) {
 		try {
 			String[][] processes = collect.process(containerId);
-
 			publisher.publish(PUBLISHTYPE.PROCESSES, Constants.MACADDRESSFROMENV + "_" + containerId, processes);
 			List<ChangeLog> fileDiff = collect.fileDiff(containerId);
 			if(!CollectionUtils.isEmpty(fileDiff)){
